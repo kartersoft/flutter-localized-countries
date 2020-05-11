@@ -5,22 +5,19 @@ author: Mykola Pokhylets <pohilets@gmail.com>
 homepage: https://github.com/nickolas-pohilets/flutter-localized-countries
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.6.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  intl: ^0.16.0
+  intl: 0.16.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  path: ^1.6.2
-
-dependency_overrides:
-  intl: ^0.16.0
+  path: 1.6.4
 
 flutter:
    assets:
