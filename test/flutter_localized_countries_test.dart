@@ -10,13 +10,15 @@ class TestAssetBundle extends CachingAssetBundle {
   @override
   Future<ByteData> load(String key) async {
     const prefix = "packages/flutter_localized_countries/";
-    if (key.startsWith(prefix)) {
+    if(key.startsWith(prefix)) {
       var path = join(dirname(Platform.script.toFilePath()), key.substring(prefix.length));
       var bytes = Uint8List.fromList(await File(path).readAsBytes());
       var buffer = bytes.buffer;
+      
       return ByteData.view(buffer);
     }
-    return null;
+
+    throw Exception('Invalid asset key: $key');
   }
 }
 

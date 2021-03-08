@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 
 class CountryNames {
-  static CountryNames of(BuildContext context) {
+  static CountryNames? of(BuildContext context) {
     return Localizations.of<CountryNames>(context, CountryNames);
   }
 
@@ -15,7 +15,7 @@ class CountryNames {
   final Map<String, String> data;
   CountryNames(this.locale, this.data);
 
-  String nameOf(String code) => data[code];
+  String? nameOf(String code) => data[code];
 
   List<MapEntry<String, String>> get sortedByCode {
     return data.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
@@ -27,7 +27,7 @@ class CountryNames {
 }
 
 class CountryNamesLocalizationsDelegate extends LocalizationsDelegate<CountryNames> {
-  final AssetBundle bundle;
+  final AssetBundle? bundle;
   const CountryNamesLocalizationsDelegate({this.bundle});
 
   Future<List<String>> locales() async {
@@ -49,9 +49,8 @@ class CountryNamesLocalizationsDelegate extends LocalizationsDelegate<CountryNam
       (locale) => locales.contains(locale),
       onFailure: (_) => 'en'
     );
-    if (availableLocale == null) {
-      return null;
-    }
+    
+    availableLocale ??= 'en';
 
     final data = Map<String, String>.from(await _loadJSON('data/$availableLocale.json') as Map<dynamic, dynamic>);
     return CountryNames(availableLocale, data);
