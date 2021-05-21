@@ -13,13 +13,13 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
-  intl: 0.17.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  path: 1.8.0
+  path: ^1.8.0
 
 flutter:
    assets:
