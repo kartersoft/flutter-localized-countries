@@ -1,13 +1,12 @@
-library flutter_localized_countries;
-
 import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'dart:convert';
 
 class CountryNames {
-  static CountryNames of(BuildContext context) {
+  static CountryNames? of(BuildContext context) {
     return Localizations.of<CountryNames>(context, CountryNames);
   }
 
@@ -15,7 +14,7 @@ class CountryNames {
   final Map<String, String> data;
   CountryNames(this.locale, this.data);
 
-  String nameOf(String code) => data[code];
+  String? nameOf(String code) => data[code];
 
   List<MapEntry<String, String>> get sortedByCode {
     return data.entries.toList()..sort((a, b) => a.key.compareTo(b.key));
@@ -27,8 +26,9 @@ class CountryNames {
 }
 
 class CountryNamesLocalizationsDelegate extends LocalizationsDelegate<CountryNames> {
-  final AssetBundle bundle;
   const CountryNamesLocalizationsDelegate({this.bundle});
+
+  final AssetBundle? bundle;
 
   Future<List<String>> locales() async {
     return List<String>.from(await _loadJSON('languages.json') as List<dynamic>);
@@ -39,18 +39,19 @@ class CountryNamesLocalizationsDelegate extends LocalizationsDelegate<CountryNam
 
   @override
   Future<CountryNames> load(Locale locale) async {
-    final String name = locale.countryCode == null ? locale.languageCode : locale.toString();
-    final String localeName = Intl.canonicalizedLocale(name);
+    final name = locale.countryCode == null ? locale.languageCode : locale.toString();
+    final localeName = Intl.canonicalizedLocale(name);
 
-    var locales = Set<String>.from(await this.locales());
+    final locales = Set<String>.from(await this.locales());
 
-    var availableLocale = Intl.verifiedLocale(
+    final availableLocale = Intl.verifiedLocale(
       localeName,
       (locale) => locales.contains(locale),
       onFailure: (_) => 'en'
     );
-    if (availableLocale == null) {
-      return null;
+
+    if(availableLocale == null) {
+      throw Exception('Country names not available for locale: $locale');
     }
 
     final data = Map<String, String>.from(await _loadJSON('data/$availableLocale.json') as Map<dynamic, dynamic>);
@@ -64,7 +65,8 @@ class CountryNamesLocalizationsDelegate extends LocalizationsDelegate<CountryNam
 
   Future<dynamic> _loadJSON(key) {
     Future<dynamic> parser(String data) async => jsonDecode(data);
-    final bundle = this.bundle ?? rootBundle;
+    final AssetBundle bundle = this.bundle ?? rootBundle;
+    
     return bundle.loadStructuredData('packages/flutter_localized_countries/' + key, parser);
   }
 }
